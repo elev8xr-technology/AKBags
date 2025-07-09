@@ -59,22 +59,22 @@ const Home: React.FC = () => {
                   <img
                     src={collection.coverImage}
                     alt={collection.name}
-                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <div className="p-3">
-                  <h3 className="text-base font-serif font-semibold text-gray-900 mb-1 group-hover:text-yellow-600 transition-colors">
+                <div className="p-4">
+                  <h3 className="text-lg font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
                     {collection.name}
                   </h3>
-                  <p className="text-gray-600 text-xs leading-tight mb-2 line-clamp-2">
+                  <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-2">
                     {collection.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">
+                    <span className="text-sm text-gray-500">
                       {collection.albums.length} {collection.albums.length === 1 ? 'Album' : 'Albums'}
                     </span>
-                    <span className="text-xs font-medium text-yellow-600 group-hover:text-yellow-700 flex items-center">
-                      View <ArrowRight size={10} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                    <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700 flex items-center">
+                      View <ArrowRight size={12} className="ml-1 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </div>
