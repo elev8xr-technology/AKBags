@@ -21,7 +21,7 @@ export const collections: Collection[] = [
           },
           {
             id: '1-1-2',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Executive Briefcase - Brown',
             alt: 'Brown leather executive briefcase'
           },
@@ -39,7 +39,7 @@ export const collections: Collection[] = [
           },
           {
             id: '1-1-5',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Executive Messenger',
             alt: 'Executive messenger bag'
           },
@@ -54,12 +54,12 @@ export const collections: Collection[] = [
       {
         id: '1-2',
         name: 'Daily Essentials',
-        coverImage: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=800',
+        coverImage: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=800',
         collectionId: '1',
         images: [
           {
             id: '1-2-1',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Daily Messenger',
             alt: 'Everyday messenger bag'
           },
@@ -117,7 +117,7 @@ export const collections: Collection[] = [
           },
           {
             id: '2-1-4',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Artisan Backpack',
             alt: 'Handcrafted leather backpack'
           },
@@ -149,7 +149,7 @@ export const collections: Collection[] = [
           },
           {
             id: '2-2-3',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Retro Messenger',
             alt: 'Retro messenger bag'
           }
@@ -183,7 +183,7 @@ export const collections: Collection[] = [
           },
           {
             id: '3-1-3',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'City Tote',
             alt: 'Urban tote bag'
           },
@@ -215,7 +215,7 @@ export const collections: Collection[] = [
           },
           {
             id: '3-2-3',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Laptop Sleeve',
             alt: 'Premium laptop sleeve'
           }
@@ -255,7 +255,7 @@ export const collections: Collection[] = [
           },
           {
             id: '4-1-4',
-            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            url: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Weekend Getaway',
             alt: 'Weekend travel bag'
           }
