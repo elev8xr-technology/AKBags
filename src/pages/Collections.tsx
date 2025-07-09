@@ -22,14 +22,14 @@ const Collections: React.FC = () => {
               to={`/collections/${collection.id}`}
               className="group block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="aspect-w-16 aspect-h-12 overflow-hidden">
+              <div className="overflow-hidden">
                 <img
                   src={collection.coverImage}
                   alt={collection.name}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <div className="p-6">
+              <div className="p-5">
                 <h3 className="text-xl font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
                   {collection.name}
                 </h3>
