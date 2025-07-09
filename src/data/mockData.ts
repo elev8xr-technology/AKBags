@@ -36,6 +36,18 @@ export const collections: Collection[] = [
             url: 'https://images.pexels.com/photos/1454949/pexels-photo-1454949.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Executive Laptop Bag',
             alt: 'Professional laptop bag'
+          },
+          {
+            id: '1-1-5',
+            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Executive Messenger',
+            alt: 'Executive messenger bag'
+          },
+          {
+            id: '1-1-6',
+            url: 'https://images.pexels.com/photos/1200562/pexels-photo-1200562.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Executive Tote',
+            alt: 'Executive tote bag'
           }
         ]
       },
@@ -62,6 +74,12 @@ export const collections: Collection[] = [
             url: 'https://images.pexels.com/photos/1454949/pexels-photo-1454949.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Compact Crossbody',
             alt: 'Small crossbody bag'
+          },
+          {
+            id: '1-2-4',
+            url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Weekend Duffle',
+            alt: 'Weekend duffle bag'
           }
         ]
       }
@@ -96,6 +114,44 @@ export const collections: Collection[] = [
             url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'Heritage Briefcase',
             alt: 'Traditional leather briefcase'
+          },
+          {
+            id: '2-1-4',
+            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Artisan Backpack',
+            alt: 'Handcrafted leather backpack'
+          },
+          {
+            id: '2-1-5',
+            url: 'https://images.pexels.com/photos/1200562/pexels-photo-1200562.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Heritage Tote',
+            alt: 'Heritage leather tote'
+          }
+        ]
+      },
+      {
+        id: '2-2',
+        name: 'Vintage Classics',
+        coverImage: 'https://images.pexels.com/photos/1454949/pexels-photo-1454949.jpeg?auto=compress&cs=tinysrgb&w=800',
+        collectionId: '2',
+        images: [
+          {
+            id: '2-2-1',
+            url: 'https://images.pexels.com/photos/1454949/pexels-photo-1454949.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Vintage Doctor Bag',
+            alt: 'Classic doctor bag'
+          },
+          {
+            id: '2-2-2',
+            url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Classic Briefcase',
+            alt: 'Vintage briefcase'
+          },
+          {
+            id: '2-2-3',
+            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Retro Messenger',
+            alt: 'Retro messenger bag'
           }
         ]
       }
@@ -130,6 +186,78 @@ export const collections: Collection[] = [
             url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
             title: 'City Tote',
             alt: 'Urban tote bag'
+          },
+          {
+            id: '3-1-4',
+            url: 'https://images.pexels.com/photos/1200562/pexels-photo-1200562.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Street Crossbody',
+            alt: 'Street style crossbody'
+          }
+        ]
+      },
+      {
+        id: '3-2',
+        name: 'Tech Forward',
+        coverImage: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
+        collectionId: '3',
+        images: [
+          {
+            id: '3-2-1',
+            url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Smart Briefcase',
+            alt: 'Tech-enabled briefcase'
+          },
+          {
+            id: '3-2-2',
+            url: 'https://images.pexels.com/photos/1454949/pexels-photo-1454949.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Digital Nomad Pack',
+            alt: 'Digital nomad backpack'
+          },
+          {
+            id: '3-2-3',
+            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Laptop Sleeve',
+            alt: 'Premium laptop sleeve'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '4',
+    name: 'Travel Collection',
+    coverImage: 'https://images.pexels.com/photos/1200562/pexels-photo-1200562.jpeg?auto=compress&cs=tinysrgb&w=800',
+    description: 'Designed for the modern traveler',
+    albums: [
+      {
+        id: '4-1',
+        name: 'Journey Essentials',
+        coverImage: 'https://images.pexels.com/photos/1200562/pexels-photo-1200562.jpeg?auto=compress&cs=tinysrgb&w=800',
+        collectionId: '4',
+        images: [
+          {
+            id: '4-1-1',
+            url: 'https://images.pexels.com/photos/1200562/pexels-photo-1200562.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Travel Duffle',
+            alt: 'Luxury travel duffle bag'
+          },
+          {
+            id: '4-1-2',
+            url: 'https://images.pexels.com/photos/1454949/pexels-photo-1454949.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Carry-On Companion',
+            alt: 'Carry-on travel bag'
+          },
+          {
+            id: '4-1-3',
+            url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Travel Organizer',
+            alt: 'Travel organizer bag'
+          },
+          {
+            id: '4-1-4',
+            url: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=1200',
+            title: 'Weekend Getaway',
+            alt: 'Weekend travel bag'
           }
         ]
       }
