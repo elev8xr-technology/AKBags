@@ -53,28 +53,28 @@ const Home: React.FC = () => {
               <Link
                 key={collection.id}
                 to={`/collections/${collection.id}`}
-                className="group block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+                className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="aspect-w-16 aspect-h-12 overflow-hidden">
+                <div className="aspect-square overflow-hidden">
                   <img
                     src={collection.coverImage}
                     alt={collection.name}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
+                <div className="p-4">
+                  <h3 className="text-lg font-serif font-semibold text-gray-900 mb-1 group-hover:text-yellow-600 transition-colors">
                     {collection.name}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                  <p className="text-gray-600 text-xs leading-relaxed mb-3">
                     {collection.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-xs text-gray-500">
                       {collection.albums.length} {collection.albums.length === 1 ? 'Album' : 'Albums'}
                     </span>
-                    <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700 flex items-center">
-                      View Collection <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                    <span className="text-xs font-medium text-yellow-600 group-hover:text-yellow-700 flex items-center">
+                      View <ArrowRight size={12} className="ml-1 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </div>
