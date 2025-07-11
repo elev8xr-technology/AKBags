@@ -194,7 +194,3 @@ export const apiService = {
     }
   }
 };
-  // Check if apiAlbum exists and has required properties
-  if (!apiAlbum || !apiAlbum.id || !apiAlbum.title || !apiAlbum.collection_id) {
-    return null;
-  }
