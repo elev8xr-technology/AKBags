@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Search } from 'lucide-react';
-import { collections } from '../data/mockData';
-import { Album, Image } from '../types';
+import { apiService } from '../services/api';
+import { Album, Image, Collection } from '../types';
 import { Link } from 'react-router-dom';
 
 interface SearchOverlayProps {
@@ -19,6 +19,24 @@ interface SearchResult {
 const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [collections, setCollections] = useState<Collection[]>([]);
+
+  // Load collections on mount for search context
+  useEffect(() => {
+    const loadCollections = async () => {
+      try {
+        const data = await apiService.getCollections();
+        setCollections(data);
+      } catch (error) {
+        console.error('Error loading collections for search:', error);
+      }
+    };
+
+    if (isOpen) {
+      loadCollections();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (query.length < 2) {
@@ -26,36 +44,50 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
       return;
     }
 
-    const searchResults: SearchResult[] = [];
-    const queryLower = query.toLowerCase();
+    const searchData = async () => {
+      setLoading(true);
+      try {
+        const searchResults: SearchResult[] = [];
+        const queryLower = query.toLowerCase();
 
-    collections.forEach(collection => {
-      collection.albums.forEach(album => {
-        // Search in album names
-        if (album.name.toLowerCase().includes(queryLower)) {
-          searchResults.push({
-            type: 'album',
-            album,
-            collectionName: collection.name
-          });
-        }
+        // Search through collections data
+        collections.forEach(collection => {
+          collection.albums.forEach(album => {
+            // Search in album names
+            if (album.name.toLowerCase().includes(queryLower)) {
+              searchResults.push({
+                type: 'album',
+                album,
+                collectionName: collection.name
+              });
+            }
 
-        // Search in image titles
-        album.images.forEach(image => {
-          if (image.title?.toLowerCase().includes(queryLower)) {
-            searchResults.push({
-              type: 'image',
-              image,
-              album,
-              collectionName: collection.name
+            // Search in image titles
+            album.images.forEach(image => {
+              if (image.title?.toLowerCase().includes(queryLower)) {
+                searchResults.push({
+                  type: 'image',
+                  image,
+                  album,
+                  collectionName: collection.name
+                });
+              }
             });
-          }
+          });
         });
-      });
-    });
 
-    setResults(searchResults.slice(0, 10)); // Limit to 10 results
-  }, [query]);
+        setResults(searchResults.slice(0, 10)); // Limit to 10 results
+      } catch (error) {
+        console.error('Search error:', error);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchData, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [query, collections]);
 
   if (!isOpen) return null;
 
@@ -87,7 +119,12 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
 
           {query.length >= 2 && (
             <div className="max-h-96 overflow-y-auto">
-              {results.length > 0 ? (
+              {loading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-2"></div>
+                  <p className="text-gray-600">Searching...</p>
+                </div>
+              ) : results.length > 0 ? (
                 <div className="space-y-3">
                   {results.map((result, index) => (
                     <div key={index} className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition-colors">
@@ -97,6 +134,10 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
                             src={result.album.coverImage}
                             alt={result.album.name}
                             className="w-16 h-16 object-cover rounded-lg"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+                            }}
                           />
                           <div className="flex-1 min-w-0">
                             <Link
@@ -120,6 +161,10 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
                             src={result.image.url}
                             alt={result.image.title || 'Image'}
                             className="w-16 h-16 object-cover rounded-lg"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+                            }}
                           />
                           <div className="flex-1 min-w-0">
                             <Link

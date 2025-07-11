@@ -1,30 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { collections } from '../data/mockData';
+import { apiService } from '../services/api';
+import { Album as AlbumType, Collection, Image } from '../types';
 import { ArrowLeft } from 'lucide-react';
 import ImageModal from '../components/ImageModal';
-import { Image } from '../types';
 
 const Album: React.FC = () => {
   const { collectionId, albumId } = useParams<{ collectionId: string; albumId: string }>();
+  const [album, setAlbum] = useState<AlbumType | null>(null);
+  const [collection, setCollection] = useState<Collection | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
 
-  const collection = collections.find(c => c.id === collectionId);
-  const album = collection?.albums.find(a => a.id === albumId);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!collectionId || !albumId) return;
+      
+      try {
+        setLoading(true);
+        
+        // Fetch both collection and album data
+        const [collectionData, albumData] = await Promise.all([
+          apiService.getCollection(collectionId),
+          apiService.getCollectionAlbum(collectionId, albumId)
+        ]);
+        
+        setCollection(collectionData);
+        setAlbum(albumData);
+      } catch (err) {
+        setError('Failed to load album');
+        console.error('Error loading album:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!collection || !album) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-serif font-bold text-gray-900 mb-4">Album Not Found</h1>
-          <Link to="/collections" className="text-yellow-600 hover:text-yellow-700">
-            ← Back to Collections
-          </Link>
-        </div>
-      </div>
-    );
-  }
+    fetchData();
+  }, [collectionId, albumId]);
 
   const handleImageClick = (image: Image, index: number) => {
     setSelectedImage(image);
@@ -32,7 +46,7 @@ const Album: React.FC = () => {
   };
 
   const handleNextImage = () => {
-    if (selectedImageIndex < album.images.length - 1) {
+    if (album && selectedImageIndex < album.images.length - 1) {
       const nextIndex = selectedImageIndex + 1;
       setSelectedImageIndex(nextIndex);
       setSelectedImage(album.images[nextIndex]);
@@ -43,9 +57,35 @@ const Album: React.FC = () => {
     if (selectedImageIndex > 0) {
       const prevIndex = selectedImageIndex - 1;
       setSelectedImageIndex(prevIndex);
-      setSelectedImage(album.images[prevIndex]);
+      setSelectedImage(album!.images[prevIndex]);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading album...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !collection || !album) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-serif font-bold text-gray-900 mb-4">
+            {error || 'Album Not Found'}
+          </h1>
+          <Link to="/collections" className="text-yellow-600 hover:text-yellow-700">
+            ← Back to Collections
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
@@ -70,30 +110,40 @@ const Album: React.FC = () => {
         </div>
 
         {/* Images Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {album.images.map((image, index) => (
-            <button
-              key={image.id}
-              onClick={() => handleImageClick(image, index)}
-              className="group relative aspect-square bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-            >
-              <img
-                src={image.url}
-                alt={image.title || 'Image'}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-              {image.title && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-white text-sm font-medium truncate">{image.title}</p>
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
+        {album.images.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No images available in this album.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {album.images.map((image, index) => (
+              <button
+                key={image.id}
+                onClick={() => handleImageClick(image, index)}
+                className="group relative aspect-square bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              >
+                <img
+                  src={image.url}
+                  alt={image.title || 'Image'}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+                  }}
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                {image.title && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-white text-sm font-medium truncate">{image.title}</p>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Image Modal */}
-        {selectedImage && (
+        {selectedImage && album && (
           <ImageModal
             image={selectedImage}
             album={album}

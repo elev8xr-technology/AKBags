@@ -1,15 +1,75 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collections } from '../data/mockData';
+import { apiService } from '../services/api';
+import { Album } from '../types';
+
+interface AlbumWithCollection extends Album {
+  collectionName?: string;
+}
 
 const Albums: React.FC = () => {
-  // Flatten all albums from all collections
-  const allAlbums = collections.flatMap(collection => 
-    collection.albums.map(album => ({
-      ...album,
-      collectionName: collection.name
-    }))
-  );
+  const [albums, setAlbums] = useState<AlbumWithCollection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        setLoading(true);
+        
+        // First get all collections to get collection names
+        const collections = await apiService.getCollections();
+        
+        // Then get all albums
+        const albumsData = await apiService.getAllAlbums();
+        
+        // Map albums with collection names
+        const albumsWithCollectionNames = albumsData.map(album => {
+          const collection = collections.find(c => c.id === album.collectionId);
+          return {
+            ...album,
+            collectionName: collection?.name || 'Unknown Collection'
+          };
+        });
+        
+        setAlbums(albumsWithCollectionNames);
+      } catch (err) {
+        setError('Failed to load albums');
+        console.error('Error loading albums:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlbums();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading albums...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
@@ -23,63 +83,75 @@ const Albums: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {allAlbums.map((album) => (
-            <Link
-              key={`${album.collectionId}-${album.id}`}
-              to={`/collections/${album.collectionId}/albums/${album.id}`}
-              className="group block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="aspect-square overflow-hidden">
-                <img
-                  src={album.coverImage}
-                  alt={album.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
-                  {album.name}
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">
-                  {album.collectionName}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">
-                    {album.images.length} {album.images.length === 1 ? 'Image' : 'Images'}
-                  </span>
-                  <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700 opacity-0 group-hover:opacity-100 transition-opacity">
-                    View Album →
-                  </span>
+        {albums.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No albums available at the moment.</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {albums.map((album) => (
+                <Link
+                  key={`${album.collectionId}-${album.id}`}
+                  to={`/collections/${album.collectionId}/albums/${album.id}`}
+                  className="group block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="aspect-square overflow-hidden">
+                    <img
+                      src={album.coverImage}
+                      alt={album.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+                      }}
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
+                      {album.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-3">
+                      {album.collectionName}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">
+                        {album.images.length} {album.images.length === 1 ? 'Image' : 'Images'}
+                      </span>
+                      <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                        View Album →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Stats Section */}
+            <div className="mt-20 bg-white rounded-2xl shadow-lg p-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                  <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                    {new Set(albums.map(album => album.collectionId)).size}
+                  </div>
+                  <div className="text-gray-600">Collections</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                    {albums.length}
+                  </div>
+                  <div className="text-gray-600">Albums</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                    {albums.reduce((total, album) => total + album.images.length, 0)}
+                  </div>
+                  <div className="text-gray-600">Images</div>
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Stats Section */}
-        <div className="mt-20 bg-white rounded-2xl shadow-lg p-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                {collections.length}
-              </div>
-              <div className="text-gray-600">Collections</div>
             </div>
-            <div>
-              <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                {allAlbums.length}
-              </div>
-              <div className="text-gray-600">Albums</div>
-            </div>
-            <div>
-              <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                {allAlbums.reduce((total, album) => total + album.images.length, 0)}
-              </div>
-              <div className="text-gray-600">Images</div>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
