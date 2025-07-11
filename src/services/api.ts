@@ -62,7 +62,15 @@ export const apiService = {
       const response = await fetch(`${BASE_URL}/collections`);
       if (!response.ok) throw new Error('Failed to fetch collections');
       const data: ApiCollection[] = await response.json();
-      return data.map(transformCollection);
+      
+      // Handle case where API returns single object instead of array
+      if (Array.isArray(data)) {
+        return data.map(transformCollection);
+      } else if (data && typeof data === 'object') {
+        return [transformCollection(data as ApiCollection)];
+      } else {
+        return [];
+      }
     } catch (error) {
       console.error('Error fetching collections:', error);
       return [];
