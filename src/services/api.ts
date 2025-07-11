@@ -70,7 +70,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/collections`);
       if (!response.ok) throw new Error('Failed to fetch collections');
-      const data: ApiCollection[] = await response.json();
+      const json = await response.json();
+      const data: ApiCollection[] = json.data;
       
       // Handle case where API returns single object instead of array
       if (Array.isArray(data)) {
@@ -91,7 +92,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/collections/${id}`);
       if (!response.ok) throw new Error('Failed to fetch collection');
-      const data: ApiCollection = await response.json();
+      const json = await response.json();
+      const data: ApiCollection = json.data;
       return transformCollection(data);
     } catch (error) {
       console.error('Error fetching collection:', error);
@@ -103,7 +105,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/collections/${collectionId}/albums`);
       if (!response.ok) throw new Error('Failed to fetch collection albums');
-      const data: ApiAlbum[] = await response.json();
+      const json = await response.json();
+      const data: ApiAlbum[] = json.data;
       return data.map(transformAlbum);
     } catch (error) {
       console.error('Error fetching collection albums:', error);
@@ -115,7 +118,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/collections/${collectionId}/albums/${albumId}`);
       if (!response.ok) throw new Error('Failed to fetch album');
-      const data: ApiAlbum = await response.json();
+      const json = await response.json();
+      const data: ApiAlbum = json.data;
       return transformAlbum(data);
     } catch (error) {
       console.error('Error fetching album:', error);
@@ -128,7 +132,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/albums`);
       if (!response.ok) throw new Error('Failed to fetch albums');
-      const data: ApiAlbum[] = await response.json();
+      const json = await response.json();
+      const data: ApiAlbum[] = json.data;
       
       // Handle case where API returns single object instead of array
       if (Array.isArray(data)) {
@@ -149,7 +154,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/albums/${id}`);
       if (!response.ok) throw new Error('Failed to fetch album');
-      const data: ApiAlbum = await response.json();
+      const json = await response.json();
+      const data: ApiAlbum = json.data;
       return transformAlbum(data);
     } catch (error) {
       console.error('Error fetching album:', error);
@@ -161,7 +167,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/albums/${albumId}/images`);
       if (!response.ok) throw new Error('Failed to fetch album images');
-      const data: ApiImage[] = await response.json();
+      const json = await response.json();
+      const data: ApiImage[] = json.data;
       return data.map(transformImage);
     } catch (error) {
       console.error('Error fetching album images:', error);
@@ -174,7 +181,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/images`);
       if (!response.ok) throw new Error('Failed to fetch images');
-      const data: ApiImage[] = await response.json();
+      const json = await response.json();
+      const data: ApiImage[] = json.data;
       return data.map(transformImage);
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -186,7 +194,8 @@ export const apiService = {
     try {
       const response = await fetch(`${BASE_URL}/images/${id}`);
       if (!response.ok) throw new Error('Failed to fetch image');
-      const data: ApiImage = await response.json();
+      const json = await response.json();
+      const data: ApiImage = json.data;
       return transformImage(data);
     } catch (error) {
       console.error('Error fetching image:', error);
