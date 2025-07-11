@@ -27,30 +27,34 @@ export interface ApiImage {
 }
 
 // Transform API data to frontend types
-export const transformCollection = (apiCollection: ApiCollection) => ({
+export const transformCollection = (apiCollection: ApiCollection) => {
   // Check if apiCollection exists and has required properties
   if (!apiCollection || !apiCollection.id || !apiCollection.name) {
     return null;
   }
 
-  id: apiCollection.id.toString(),
-  name: apiCollection.name,
-  description: apiCollection.description || '',
-  coverImage: apiCollection.albums?.[0]?.images?.[0] 
-    ? `${STORAGE_URL}/${apiCollection.albums[0].images[0].image_path}`
-    : 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
-  albums: apiCollection.albums?.map(transformAlbum) || []
-});
+  return {
+    id: apiCollection.id.toString(),
+    name: apiCollection.name,
+    description: apiCollection.description || '',
+    coverImage: apiCollection.albums?.[0]?.images?.[0] 
+      ? `${STORAGE_URL}/${apiCollection.albums[0].images[0].image_path}`
+      : 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
+    albums: apiCollection.albums?.map(transformAlbum) || []
+  };
+};
 
-export const transformAlbum = (apiAlbum: ApiAlbum) => ({
-  id: apiAlbum.id.toString(),
-  name: apiAlbum.title,
-  coverImage: apiAlbum.images?.[0] 
-    ? `${STORAGE_URL}/${apiAlbum.images[0].image_path}`
-    : 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
-  collectionId: apiAlbum.collection_id.toString(),
-  images: apiAlbum.images?.map(transformImage) || []
-});
+export const transformAlbum = (apiAlbum: ApiAlbum) => {
+  return {
+    id: apiAlbum.id.toString(),
+    name: apiAlbum.title,
+    coverImage: apiAlbum.images?.[0] 
+      ? `${STORAGE_URL}/${apiAlbum.images[0].image_path}`
+      : 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
+    collectionId: apiAlbum.collection_id.toString(),
+    images: apiAlbum.images?.map(transformImage) || []
+  };
+};
 
 export const transformImage = (apiImage: ApiImage) => ({
   id: apiImage.id.toString(),
