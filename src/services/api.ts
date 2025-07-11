@@ -28,6 +28,11 @@ export interface ApiImage {
 
 // Transform API data to frontend types
 export const transformCollection = (apiCollection: ApiCollection) => ({
+  // Check if apiCollection exists and has required properties
+  if (!apiCollection || !apiCollection.id || !apiCollection.name) {
+    return null;
+  }
+
   id: apiCollection.id.toString(),
   name: apiCollection.name,
   description: apiCollection.description || '',
@@ -65,9 +70,10 @@ export const apiService = {
       
       // Handle case where API returns single object instead of array
       if (Array.isArray(data)) {
-        return data.map(transformCollection);
+        return data.map(transformCollection).filter(collection => collection !== null);
       } else if (data && typeof data === 'object') {
-        return [transformCollection(data as ApiCollection)];
+        const transformed = transformCollection(data as ApiCollection);
+        return transformed ? [transformed] : [];
       } else {
         return [];
       }
@@ -119,7 +125,16 @@ export const apiService = {
       const response = await fetch(`${BASE_URL}/albums`);
       if (!response.ok) throw new Error('Failed to fetch albums');
       const data: ApiAlbum[] = await response.json();
-      return data.map(transformAlbum);
+      
+      // Handle case where API returns single object instead of array
+      if (Array.isArray(data)) {
+        return data.map(transformAlbum).filter(album => album !== null);
+      } else if (data && typeof data === 'object') {
+        const transformed = transformAlbum(data as ApiAlbum);
+        return transformed ? [transformed] : [];
+      } else {
+        return [];
+      }
     } catch (error) {
       console.error('Error fetching albums:', error);
       return [];
@@ -175,3 +190,7 @@ export const apiService = {
     }
   }
 };
+  // Check if apiAlbum exists and has required properties
+  if (!apiAlbum || !apiAlbum.id || !apiAlbum.title || !apiAlbum.collection_id) {
+    return null;
+  }
