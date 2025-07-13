@@ -28,9 +28,9 @@ const Home: React.FC = () => {
 
   // Get featured collections (first 3)
   const featuredCollections = collections.slice(0, 3);
-  
+
   // Get featured albums from all collections
-  const featuredAlbums = collections.flatMap(collection => 
+  const featuredAlbums = collections.flatMap(collection =>
     collection.albums.slice(0, 2).map(album => ({
       ...album,
       collectionName: collection.name
@@ -53,8 +53,8 @@ const Home: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
           >
             Try Again
@@ -275,7 +275,7 @@ const Home: React.FC = () => {
               </div>
               <div>
                 <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                  {collections.reduce((total, collection) => 
+                  {collections.reduce((total, collection) =>
                     total + collection.albums.reduce((albumTotal, album) => albumTotal + album.images.length, 0), 0
                   )}
                 </div>
