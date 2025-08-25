@@ -4,7 +4,7 @@ import Header from './components/Header';
 import SearchOverlay from './components/SearchOverlay';
 import Home from './pages/Home';
 import Collections from './pages/Collections';
-import CollectionDetail from './pages/CollectionDetail';
+import { CollectionDetail } from './pages/CollectionDetail';
 import Album from './pages/Album';
 import Albums from './pages/Albums';
 

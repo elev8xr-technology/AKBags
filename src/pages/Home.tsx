@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, Grid3X3 } from 'lucide-react';
+import HeroImage from '../../LL.png';
 import { apiService } from '../services/api';
 import { Collection, Album } from '../types';
 
@@ -88,21 +89,18 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream-50 animate-fade-in pt-28">
+    <div className="min-h-screen bg-cream-50 animate-fade-in pt-20">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-amber-50 to-cream-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center py-20 sm:py-24 md:py-32">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-extrabold text-gray-900 mb-6 tracking-tight animate-slide-up">
-              AKBag
-            </h1>
-            <p className="text-lg md:text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              Crafting exceptional leather goods with timeless elegance and uncompromising quality.
-            </p>
+      <section 
+        className="relative bg-cover bg-center text-white h-[60vh] md:h-[80vh] min-h-[400px] max-h-[700px]"
+        style={{ backgroundImage: `url(${HeroImage})` }}
+      >
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex flex-col items-center justify-end h-full pb-20 sm:pb-24 md:pb-32">
             <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
               <Link
                 to="/collections"
-                className="inline-flex items-center px-8 py-4 bg-gray-900 text-white text-lg font-semibold rounded-full hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl group"
+                className="inline-flex items-center px-8 py-4 bg-white text-gray-900 text-lg font-semibold rounded-full hover:bg-gold-100 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl group"
               >
                 Explore Collections
                 <ArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" size={22} />

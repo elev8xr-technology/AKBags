@@ -5,7 +5,7 @@ import { Collection, Album, PaginationMeta } from '../types';
 import Pagination from '../components/Pagination';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-const CollectionDetail: React.FC = () => {
+export const CollectionDetail: React.FC = () => {
   const { collectionId } = useParams<{ collectionId: string }>();
   const [collection, setCollection] = useState<Collection | null>(null);
   const [albums, setAlbums] = useState<Album[]>([]);
@@ -182,5 +182,3 @@ const CollectionDetail: React.FC = () => {
     </div>
   );
 };
-
-export default CollectionDetail;

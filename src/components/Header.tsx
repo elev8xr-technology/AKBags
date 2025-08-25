@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search, Menu, X } from 'lucide-react';
+import AkLogo from '../../AKlogo.png';
 
 interface HeaderProps {
   onSearchToggle: () => void;
@@ -22,9 +23,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchToggle }) => {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <span className="text-3xl font-serif font-bold text-gray-900 tracking-tight group-hover:text-gold-600 transition-colors">
-              AKBag
-            </span>
+            <img src={AkLogo} alt="AKBag Logo" className="h-14" />
           </Link>
 
           {/* Desktop Navigation */}
