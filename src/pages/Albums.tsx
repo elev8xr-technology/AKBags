@@ -78,9 +78,9 @@ const Albums: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-20">
+    <div className="min-h-screen bg-cream-50 pt-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="text-center mb-12 md:mb-20">
           <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 tracking-tight mb-6">
             All Albums
           </h1>
@@ -135,7 +135,7 @@ const Albums: React.FC = () => {
             </div>
 
             {paginationMeta && paginationMeta.last_page > 1 && (
-              <div className="mt-20 mb-24">
+              <div className="mt-16 md:mt-20 mb-24">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={paginationMeta.last_page}
@@ -146,7 +146,7 @@ const Albums: React.FC = () => {
 
             {paginationMeta && paginationMeta.total > 0 && (
               <div className="bg-beige-100/50 rounded-2xl border border-black/10">
-                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 text-center p-10">
+                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 text-center p-6 md:p-10">
                   <div className="md:border-r md:border-black/10 px-4">
                     <div className="text-4xl font-serif font-bold text-gold-700 mb-2">
                       {new Set(albums.map(album => album.collectionId)).size}

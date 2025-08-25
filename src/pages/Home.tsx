@@ -88,12 +88,12 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream-50 animate-fade-in">
+    <div className="min-h-screen bg-cream-50 animate-fade-in pt-28">
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-amber-50 to-cream-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center py-24 md:py-32">
-            <h1 className="text-5xl md:text-7xl font-serif font-extrabold text-gray-900 mb-6 tracking-tight animate-slide-up">
+          <div className="text-center py-20 sm:py-24 md:py-32">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-extrabold text-gray-900 mb-6 tracking-tight animate-slide-up">
               AKBag
             </h1>
             <p className="text-lg md:text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
@@ -114,10 +114,10 @@ const Home: React.FC = () => {
 
       {/* Featured Collections Section */}
       {featuredCollections.length > 0 && (
-        <section className="bg-cream-50 py-20 md:py-24">
+        <section className="bg-cream-50 py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
                 Featured Collections
               </h2>
               <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -175,10 +175,10 @@ const Home: React.FC = () => {
 
       {/* Featured Albums Section */}
       {featuredAlbums.length > 0 && (
-        <section className="bg-white py-20 md:py-24">
+        <section className="bg-white py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
                 Featured Albums
               </h2>
               <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -281,19 +281,19 @@ const Home: React.FC = () => {
           <div className="bg-cream-50 rounded-2xl shadow-lg p-8 lg:p-12 border border-gray-200/80">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-8 text-center sm:divide-x divide-gray-300/70">
               <div className="px-4">
-                <p className="text-5xl font-serif font-bold text-gold-600 mb-2">
+                <p className="text-4xl sm:text-5xl font-serif font-bold text-gold-600 mb-2">
                   {totalCollections}
                 </p>
                 <p className="text-lg text-gray-700 font-semibold">Collections</p>
               </div>
               <div className="px-4">
-                <p className="text-5xl font-serif font-bold text-gold-600 mb-2">
+                <p className="text-4xl sm:text-5xl font-serif font-bold text-gold-600 mb-2">
                   {totalAlbums}
                 </p>
                 <p className="text-lg text-gray-700 font-semibold">Albums</p>
               </div>
               <div className="px-4">
-                <p className="text-5xl font-serif font-bold text-gold-600 mb-2">
+                <p className="text-4xl sm:text-5xl font-serif font-bold text-gold-600 mb-2">
                   {totalImages}
                 </p>
                 <p className="text-lg text-gray-700 font-semibold">Images</p>
@@ -305,8 +305,8 @@ const Home: React.FC = () => {
 
       {/* CTA Section */}
       <section className="bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 text-center">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-white mb-6">
             Discover Your Perfect Companion
           </h2>
           <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">

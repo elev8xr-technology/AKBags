@@ -83,10 +83,10 @@ const CollectionDetail: React.FC = () => {
   }
 
   return (
-    <div className="bg-cream-50 min-h-screen animate-fade-in">
+    <div className="bg-cream-50 min-h-screen animate-fade-in pt-28">
       {/* Hero Section */}
       <section 
-        className="relative bg-gray-900 bg-cover bg-center text-white py-24 md:py-32"
+        className="relative bg-gray-900 bg-cover bg-center text-white py-20 sm:py-24 md:py-32"
         style={{ backgroundImage: `url(${collection.coverImage || 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'})` }}
       >
         <div className="absolute inset-0 bg-black/60"></div>
@@ -100,7 +100,7 @@ const CollectionDetail: React.FC = () => {
               Back to Collections
             </Link>
           </div>
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-4">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold mb-4">
             {collection.name}
           </h1>
           {collection.description && (
@@ -114,7 +114,7 @@ const CollectionDetail: React.FC = () => {
       {/* Albums Section */}
       <section className="py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-serif font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-3xl font-serif font-bold text-gray-900 mb-8 md:mb-12 text-center">
             Albums in this Collection
           </h2>
           {albums.length === 0 ? (
@@ -155,11 +155,11 @@ const CollectionDetail: React.FC = () => {
                 ))}
               </div>
               {paginationMeta && paginationMeta.total > 0 && (
-                <div className="my-16">
+                <div className="mt-12 md:mt-16 mb-12">
                   {/* Stats Section */}
                   <div className="max-w-xs mx-auto bg-cream-100/60 rounded-xl shadow-md p-6 mb-12 border border-gray-200/80">
                     <div className="text-center">
-                        <p className="text-4xl font-serif font-bold text-gold-600 mb-2">
+                        <p className="text-3xl sm:text-4xl font-serif font-bold text-gold-600 mb-2">
                           {paginationMeta.total}
                         </p>
                         <p className="text-md text-gray-700 font-semibold uppercase tracking-wider">Total Albums</p>

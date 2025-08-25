@@ -65,10 +65,10 @@ const Collections: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 tracking-tight mb-6">
+    <div className="min-h-screen bg-cream-50 pt-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="text-center mb-12 md:mb-20">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-gray-900 tracking-tight mb-6">
             Our Collections
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -120,7 +120,7 @@ const Collections: React.FC = () => {
               ))}
             </div>
             {paginationMeta && paginationMeta.last_page > 1 && (
-              <div className="mt-20 mb-12">
+              <div className="mt-16 md:mt-20 mb-12">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={paginationMeta.last_page}
