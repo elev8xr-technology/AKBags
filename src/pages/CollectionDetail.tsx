@@ -123,7 +123,7 @@ export const CollectionDetail: React.FC = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-10">
                 {albums.map((album) => (
                   <Link
                     key={album.id}
@@ -141,8 +141,8 @@ export const CollectionDetail: React.FC = () => {
                         }}
                       />
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-serif font-bold text-gray-900 mb-3 group-hover:text-gold-600 transition-colors">
+                    <div className="p-3 sm:p-6">
+                      <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-gold-600 transition-colors">
                         {album.name}
                       </h3>
                       <div className="flex items-center justify-end">

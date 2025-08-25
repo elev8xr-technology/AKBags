@@ -95,14 +95,14 @@ const Albums: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8">
               {albums.map((album) => (
                 <Link
                   key={`${album.collectionId}-${album.id}`}
                   to={`/collections/${album.collectionId}/albums/${album.id}`}
                   className="group block bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-gold-300"
                 >
-                  <div className="relative w-full h-64 overflow-hidden">
+                  <div className="relative w-full h-48 sm:h-64 overflow-hidden">
                     <img
                       src={album.coverImage}
                       alt={album.name}
@@ -113,14 +113,14 @@ const Albums: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="p-5">
-                    <h3 className="text-xl font-serif font-bold text-gray-900 mb-2 truncate group-hover:text-gold-600 transition-colors">
+                  <div className="p-3 sm:p-5">
+                    <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-1 sm:mb-2 truncate group-hover:text-gold-600 transition-colors">
                       {album.name}
                     </h3>
-                    <p className="text-sm text-gray-500 mb-4 truncate">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 truncate">
                       {album.collectionName || 'Unknown Collection'}
                     </p>
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between text-xs sm:text-sm">
                       <span className="text-gray-600 font-medium">
                         {album.images.length} {album.images.length === 1 ? 'Image' : 'Images'}
                       </span>
