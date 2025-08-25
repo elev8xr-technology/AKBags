@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, Grid3X3 } from 'lucide-react';
 import HeroImage from '../../LL.png';
+import MobileHeroImage from '../../mobilebg.png';
 import { apiService } from '../services/api';
 import { Collection, Album } from '../types';
 
@@ -91,10 +92,17 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream-50 animate-fade-in pt-20">
       {/* Hero Section */}
-      <section 
-        className="relative bg-cover bg-center text-white h-[60vh] md:h-[80vh] min-h-[400px] max-h-[700px]"
-        style={{ backgroundImage: `url(${HeroImage})` }}
-      >
+      <section className="relative text-white h-[60vh] md:h-[80vh] min-h-[400px] max-h-[700px]">
+        {/* Desktop background */}
+        <div
+          className="hidden md:block absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${HeroImage})` }}
+        ></div>
+        {/* Mobile background */}
+        <div
+          className="block md:hidden absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${MobileHeroImage})` }}
+        ></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex flex-col items-center justify-end h-full pb-20 sm:pb-24 md:pb-32">
             <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
