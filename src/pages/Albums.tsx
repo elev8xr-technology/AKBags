@@ -1,38 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/api';
-import { Album } from '../types';
-
-interface AlbumWithCollection extends Album {
-  collectionName?: string;
-}
+import { Album, PaginationMeta } from '../types';
+import Pagination from '../components/Pagination';
 
 const Albums: React.FC = () => {
-  const [albums, setAlbums] = useState<AlbumWithCollection[]>([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | null>(null);
 
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
         setLoading(true);
-        
-        // First get all collections to get collection names
-        const collections = await apiService.getCollections();
-        
-        // Then get all albums
-        const albumsData = await apiService.getAllAlbums();
-        
-        // Map albums with collection names
-        const albumsWithCollectionNames = albumsData.map(album => {
-          const collection = collections.find(c => c.id === album.collectionId);
-          return {
-            ...album,
-            collectionName: collection?.name || 'Unknown Collection'
-          };
-        });
-        
-        setAlbums(albumsWithCollectionNames);
+        const result = await apiService.getAllAlbums(currentPage, 8);
+        if (result && result.data) {
+          setAlbums(result.data as Album[]);
+          setPaginationMeta(result.meta);
+        } else {
+          setError('Failed to load albums');
+        }
       } catch (err) {
         setError('Failed to load albums');
         console.error('Error loading albums:', err);
@@ -42,7 +31,11 @@ const Albums: React.FC = () => {
     };
 
     fetchAlbums();
-  }, []);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (loading) {
     return (
@@ -61,7 +54,7 @@ const Albums: React.FC = () => {
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <button 
-            onClick={() => window.location.reload()} 
+            onClick={() => setCurrentPage(1)} 
             className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
           >
             Try Again
@@ -112,7 +105,7 @@ const Albums: React.FC = () => {
                       {album.name}
                     </h3>
                     <p className="text-sm text-gray-500 mb-3">
-                      {album.collectionName}
+                      {album.collectionName || 'Unknown Collection'}
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">
@@ -127,29 +120,39 @@ const Albums: React.FC = () => {
               ))}
             </div>
 
+            {paginationMeta && paginationMeta.last_page > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={paginationMeta.last_page}
+                onPageChange={handlePageChange}
+              />
+            )}
+
             {/* Stats Section */}
-            <div className="mt-20 bg-white rounded-2xl shadow-lg p-8">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div>
-                  <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                    {new Set(albums.map(album => album.collectionId)).size}
+            {paginationMeta && paginationMeta.total > 0 && (
+              <div className="mt-20 bg-white rounded-2xl shadow-lg p-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                  <div>
+                    <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                      {new Set(albums.map(album => album.collectionId)).size}
+                    </div>
+                    <div className="text-gray-600">Collections on this page</div>
                   </div>
-                  <div className="text-gray-600">Collections</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                    {albums.length}
+                  <div>
+                    <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                      {paginationMeta.total}
+                    </div>
+                    <div className="text-gray-600">Total Albums</div>
                   </div>
-                  <div className="text-gray-600">Albums</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                    {albums.reduce((total, album) => total + album.images.length, 0)}
+                  <div>
+                    <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                      {albums.reduce((total, album) => total + album.images.length, 0)}
+                    </div>
+                    <div className="text-gray-600">Images on this page</div>
                   </div>
-                  <div className="text-gray-600">Images</div>
                 </div>
               </div>
-            </div>
+            )}
           </>
         )}
       </div>

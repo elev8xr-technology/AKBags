@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import SearchOverlay from './components/SearchOverlay';
@@ -25,7 +25,7 @@ function App() {
           <Route path="/albums" element={<Albums />} />
           <Route path="/collections/:collectionId" element={<CollectionDetail />} />
           <Route path="/collections/:collectionId/albums/:albumId" element={<Album />} />
-        </Routes>
+                  </Routes>
       </div>
     </Router>
   );

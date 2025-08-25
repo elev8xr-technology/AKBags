@@ -4,11 +4,16 @@ import { apiService } from '../services/api';
 import { Album as AlbumType, Collection, Image } from '../types';
 import { ArrowLeft } from 'lucide-react';
 import ImageModal from '../components/ImageModal';
+import Pagination from '../components/Pagination';
+import { PaginationMeta } from '../types';
 
 const Album: React.FC = () => {
   const { collectionId, albumId } = useParams<{ collectionId: string; albumId: string }>();
   const [album, setAlbum] = useState<AlbumType | null>(null);
   const [collection, setCollection] = useState<Collection | null>(null);
+  const [images, setImages] = useState<Image[]>([]);
+  const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
@@ -21,14 +26,16 @@ const Album: React.FC = () => {
       try {
         setLoading(true);
         
-        // Fetch both collection and album data
-        const [collectionData, albumData] = await Promise.all([
-          apiService.getCollection(collectionId),
-          apiService.getCollectionAlbum(collectionId, albumId)
-        ]);
-        
+        const collectionData = await apiService.getCollection(collectionId);
+        const albumData = await apiService.getCollectionAlbum(collectionId, albumId);
         setCollection(collectionData);
         setAlbum(albumData);
+
+        const imagesResult = await apiService.getAlbumImages(albumId, currentPage, 30);
+        if (imagesResult) {
+          setImages(imagesResult.data);
+          setPaginationMeta(imagesResult.meta);
+        }
       } catch (err) {
         setError('Failed to load album');
         console.error('Error loading album:', err);
@@ -38,26 +45,31 @@ const Album: React.FC = () => {
     };
 
     fetchData();
-  }, [collectionId, albumId]);
+  }, [collectionId, albumId, currentPage]);
 
   const handleImageClick = (image: Image, index: number) => {
     setSelectedImage(image);
     setSelectedImageIndex(index);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
+
   const handleNextImage = () => {
-    if (album && selectedImageIndex < album.images.length - 1) {
+    if (images && selectedImageIndex < images.length - 1) {
       const nextIndex = selectedImageIndex + 1;
       setSelectedImageIndex(nextIndex);
-      setSelectedImage(album.images[nextIndex]);
+      setSelectedImage(images[nextIndex]);
     }
   };
 
   const handlePreviousImage = () => {
-    if (selectedImageIndex > 0) {
+    if (images && selectedImageIndex > 0) {
       const prevIndex = selectedImageIndex - 1;
       setSelectedImageIndex(prevIndex);
-      setSelectedImage(album!.images[prevIndex]);
+      setSelectedImage(images[prevIndex]);
     }
   };
 
@@ -105,18 +117,18 @@ const Album: React.FC = () => {
             {album.name}
           </h1>
           <p className="text-lg text-gray-600">
-            {collection.name} • {album.images.length} {album.images.length === 1 ? 'Image' : 'Images'}
+            {collection.name} • {paginationMeta?.total || 0} {paginationMeta?.total === 1 ? 'Image' : 'Images'}
           </p>
         </div>
 
         {/* Images Grid */}
-        {album.images.length === 0 ? (
+        {images.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-600 text-lg">No images available in this album.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {album.images.map((image, index) => (
+            {images.map((image, index) => (
               <button
                 key={image.id}
                 onClick={() => handleImageClick(image, index)}
@@ -142,6 +154,16 @@ const Album: React.FC = () => {
           </div>
         )}
 
+        {paginationMeta && paginationMeta.last_page > 1 && (
+          <div className="mt-12">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={paginationMeta.last_page}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+
         {/* Image Modal */}
         {selectedImage && album && (
           <ImageModal
@@ -152,7 +174,7 @@ const Album: React.FC = () => {
             onClose={() => setSelectedImage(null)}
             onNext={handleNextImage}
             onPrevious={handlePreviousImage}
-            hasNext={selectedImageIndex < album.images.length - 1}
+            hasNext={selectedImageIndex < images.length - 1}
             hasPrevious={selectedImageIndex > 0}
           />
         )}

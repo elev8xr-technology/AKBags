@@ -4,8 +4,8 @@ import { Image, Album, Collection } from '../types';
 
 interface ImageModalProps {
   image: Image;
-  album: Album;
-  collection: Collection;
+  album?: Album;
+  collection?: Collection;
   isOpen: boolean;
   onClose: () => void;
   onNext?: () => void;
@@ -94,8 +94,8 @@ const ImageModal: React.FC<ImageModalProps> = ({
               <h2 className="text-2xl font-serif font-semibold mb-2">{image.title}</h2>
             )}
             <div className="text-gray-300 space-y-1">
-              <p className="text-lg">{album.name}</p>
-              <p className="text-sm opacity-75">{collection.name}</p>
+              {album && <p className="text-lg">{album.name}</p>}
+              {collection && <p className="text-sm opacity-75">{collection.name}</p>}
             </div>
           </div>
         </div>

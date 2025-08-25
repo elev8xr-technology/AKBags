@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/api';
-import { Collection } from '../types';
+import { Collection, PaginationMeta } from '../types';
+import Pagination from '../components/Pagination';
 
 const Collections: React.FC = () => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | null>(null);
 
   useEffect(() => {
     const fetchCollections = async () => {
       try {
         setLoading(true);
-        const data = await apiService.getCollections();
-        setCollections(data);
+        const result = await apiService.getCollections(currentPage);
+        if (result && result.data) {
+          setCollections(result.data as Collection[]);
+          setPaginationMeta(result.meta);
+        } else {
+          setError('Failed to load collections');
+        }
       } catch (err) {
         setError('Failed to load collections');
         console.error('Error loading collections:', err);
@@ -23,7 +31,11 @@ const Collections: React.FC = () => {
     };
 
     fetchCollections();
-  }, []);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (loading) {
     return (
@@ -42,7 +54,7 @@ const Collections: React.FC = () => {
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <button 
-            onClick={() => window.location.reload()} 
+            onClick={() => setCurrentPage(1)} 
             className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
           >
             Try Again
@@ -69,45 +81,51 @@ const Collections: React.FC = () => {
             <p className="text-gray-600 text-lg">No collections available at the moment.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {collections.map((collection) => (
-              <Link
-                key={collection.id}
-                to={`/collections/${collection.id}`}
-                className="group block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="overflow-hidden">
-                  <img
-                    src={collection.coverImage}
-                    alt={collection.name}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
-                    }}
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-xl font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
-                    {collection.name}
-                  </h3>
-                  {collection.description && (
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                      {collection.description}
-                    </p>
-                  )}
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      {collection.albums.length} {collection.albums.length === 1 ? 'Album' : 'Albums'}
-                    </span>
-                    <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700">
-                      View Collection →
-                    </span>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {collections.map((collection) => (
+                <Link
+                  key={collection.id}
+                  to={`/collections/${collection.id}`}
+                  className="group block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="overflow-hidden">
+                    <img
+                      src={collection.coverImage}
+                      alt={collection.name}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+                      }}
+                    />
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                  <div className="p-5">
+                    <h3 className="text-xl font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
+                      {collection.name}
+                    </h3>
+                    {collection.description && (
+                      <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                        {collection.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700">
+                        View Collection →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            {paginationMeta && paginationMeta.last_page > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={paginationMeta.last_page}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

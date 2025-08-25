@@ -2,19 +2,50 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, Grid3X3 } from 'lucide-react';
 import { apiService } from '../services/api';
-import { Collection } from '../types';
+import { Collection, Album } from '../types';
 
 const Home: React.FC = () => {
-  const [collections, setCollections] = useState<Collection[]>([]);
+    const [collections, setCollections] = useState<Collection[]>([]);
+  const [featuredAlbums, setFeaturedAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [totalCollections, setTotalCollections] = useState(0);
+  const [totalAlbums, setTotalAlbums] = useState(0);
+  const [totalImages, setTotalImages] = useState(0);
 
   useEffect(() => {
     const fetchCollections = async () => {
       try {
         setLoading(true);
-        const data = await apiService.getCollections();
-        setCollections(data);
+                // Fetch featured content
+        const collectionsResult = await apiService.getCollections(1, 3);
+        if (collectionsResult) {
+          setCollections(collectionsResult.data as Collection[]);
+        }
+
+        const albumsResult = await apiService.getAllAlbums(1, 3);
+        if (albumsResult && albumsResult.data) {
+          setFeaturedAlbums(albumsResult.data as Album[]);
+        }
+
+        // Fetch total counts in parallel
+        const [collectionsTotalResult, albumsTotalResult, imagesTotalResult] = await Promise.all([
+          apiService.getCollections(1, 1),
+          apiService.getAllAlbums(1, 1),
+          apiService.getAllImages(1, 1)
+        ]);
+
+        if (collectionsTotalResult && collectionsTotalResult.meta) {
+          setTotalCollections(collectionsTotalResult.meta.total);
+        }
+
+        if (albumsTotalResult && albumsTotalResult.meta) {
+          setTotalAlbums(albumsTotalResult.meta.total);
+        }
+
+        if (imagesTotalResult && imagesTotalResult.meta) {
+          setTotalImages(imagesTotalResult.meta.total);
+        }
       } catch (err) {
         setError('Failed to load collections');
         console.error('Error loading collections:', err);
@@ -26,16 +57,8 @@ const Home: React.FC = () => {
     fetchCollections();
   }, []);
 
-  // Get featured collections (first 3)
+    // Get featured collections (first 3)
   const featuredCollections = collections.slice(0, 3);
-
-  // Get featured albums from all collections
-  const featuredAlbums = collections.flatMap(collection =>
-    collection.albums.slice(0, 2).map(album => ({
-      ...album,
-      collectionName: collection.name
-    }))
-  ).slice(0, 6);
 
   if (loading) {
     return (
@@ -125,7 +148,7 @@ const Home: React.FC = () => {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-500">
-                        {collection.albums.length} {collection.albums.length === 1 ? 'Album' : 'Albums'}
+                        View Collection
                       </span>
                       <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700 flex items-center">
                         View <ArrowRight size={12} className="ml-1 group-hover:translate-x-1 transition-transform" />
@@ -263,21 +286,19 @@ const Home: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>
                 <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                  {collections.length}
+                  {totalCollections}
                 </div>
                 <div className="text-gray-600">Collections</div>
               </div>
               <div>
                 <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                  {collections.reduce((total, collection) => total + collection.albums.length, 0)}
+                  {totalAlbums}
                 </div>
                 <div className="text-gray-600">Albums</div>
               </div>
               <div>
                 <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
-                  {collections.reduce((total, collection) =>
-                    total + collection.albums.reduce((albumTotal, album) => albumTotal + album.images.length, 0), 0
-                  )}
+                  {totalImages}
                 </div>
                 <div className="text-gray-600">Images</div>
               </div>
