@@ -17,22 +17,26 @@ const Header: React.FC<HeaderProps> = ({ onSearchToggle }) => {
   ];
 
   return (
-    <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+    <header className="fixed top-0 w-full bg-cream-50/80 backdrop-blur-lg border-b border-black/10 z-50 transition-all duration-300">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <span className="text-2xl font-serif font-bold text-gray-900">AKBag</span>
+          <Link to="/" className="flex items-center group">
+            <span className="text-3xl font-serif font-bold text-gray-900 tracking-tight group-hover:text-gold-600 transition-colors">
+              AKBag
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-10">
             {navItems.map(item => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-sm font-medium transition-colors hover:text-yellow-600 ${
-                  location.pathname === item.path ? 'text-yellow-600' : 'text-gray-700'
+                className={`relative text-base font-medium transition-colors hover:text-gold-600 after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-full after:h-[2px] after:bg-gold-500 after:transition-transform after:duration-300 after:ease-in-out after:transform ${
+                  location.pathname === item.path 
+                    ? 'text-gold-600 after:scale-x-100'
+                    : 'text-gray-700 after:scale-x-0 hover:after:scale-x-100'
                 }`}
               >
                 {item.label}
@@ -40,44 +44,58 @@ const Header: React.FC<HeaderProps> = ({ onSearchToggle }) => {
             ))}
           </div>
 
-          {/* Search and Mobile Menu */}
-          <div className="flex items-center space-x-4">
+          {/* Search and Mobile Menu Toggle */}
+          <div className="flex items-center space-x-2">
             <button
               onClick={onSearchToggle}
-              className="p-2 text-gray-700 hover:text-yellow-600 transition-colors"
+              className="p-2 text-gray-800 hover:text-gold-600 rounded-full hover:bg-gold-100/50 transition-colors"
+              aria-label="Search"
             >
-              <Search size={20} />
+              <Search size={22} />
             </button>
             
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-gray-700 hover:text-yellow-600 transition-colors"
+              className="md:hidden p-2 text-gray-800 hover:text-gold-600 rounded-full hover:bg-gold-100/50 transition-colors"
+              aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-              {navItems.map(item => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`block px-3 py-2 text-base font-medium rounded-md transition-colors hover:text-yellow-600 hover:bg-gray-50 ${
-                    location.pathname === item.path ? 'text-yellow-600 bg-gray-50' : 'text-gray-700'
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ${
+          mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      ></div>
+
+      {/* Mobile Menu Panel */}
+      <div
+        className={`fixed top-0 right-0 h-full w-72 bg-cream-50 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="p-6 pt-20">
+          <nav className="flex flex-col space-y-6">
+            {navItems.map(item => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`text-xl font-medium transition-colors hover:text-gold-600 ${
+                  location.pathname === item.path ? 'text-gold-600' : 'text-gray-800'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
     </header>
   );
 };

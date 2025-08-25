@@ -49,16 +49,24 @@ export const transformCollection = (apiCollection: ApiCollection) => {
 };
 
 export const transformAlbum = (apiAlbum: ApiAlbum) => {
+  let coverImageUrl = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+
+  if (apiAlbum.cover_image) {
+    if (apiAlbum.cover_image.startsWith('http')) {
+      coverImageUrl = apiAlbum.cover_image;
+    } else {
+      coverImageUrl = `${STORAGE_URL}/${apiAlbum.cover_image}`;
+    }
+  } else if (apiAlbum.images?.[0]) {
+    coverImageUrl = transformImage(apiAlbum.images[0]).url;
+  }
+
   const transformed = {
     id: apiAlbum.id.toString(),
     name: apiAlbum.title,
-    coverImage: apiAlbum.cover_image
-      ? `${STORAGE_URL}/${apiAlbum.cover_image}`
-      : apiAlbum.images?.[0]
-        ? transformImage(apiAlbum.images[0]).url
-        : 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
+    coverImage: coverImageUrl,
     collectionId: apiAlbum.collection_id.toString(),
-    images: apiAlbum.images?.map(transformImage) || []
+    images: apiAlbum.images?.map(transformImage) || [],
   };
   return transformed;
 };

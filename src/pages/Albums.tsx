@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/api';
-import { Album, PaginationMeta } from '../types';
+import { Album, Collection, PaginationMeta } from '../types';
 import Pagination from '../components/Pagination';
 
 const Albums: React.FC = () => {
@@ -12,25 +12,41 @@ const Albums: React.FC = () => {
   const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | null>(null);
 
   useEffect(() => {
-    const fetchAlbums = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await apiService.getAllAlbums(currentPage, 8);
-        if (result && result.data) {
-          setAlbums(result.data as Album[]);
-          setPaginationMeta(result.meta);
+        setError(null);
+
+        // Fetch albums and all collections in parallel
+        const [albumsResult, collectionsResult] = await Promise.all([
+          apiService.getAllAlbums(currentPage, 8),
+          apiService.getCollections(1, 100) // Fetch up to 100 collections
+        ]);
+
+        if (albumsResult && collectionsResult && albumsResult.data && collectionsResult.data) {
+          const collectionsMap = new Map(
+            (collectionsResult.data as Collection[]).map(c => [c.id, c.name])
+          );
+
+          const albumsWithCollectionNames = (albumsResult.data as Album[]).map(album => ({
+            ...album,
+            collectionName: collectionsMap.get(album.collectionId) || 'Unknown Collection'
+          }));
+
+          setAlbums(albumsWithCollectionNames);
+          setPaginationMeta(albumsResult.meta);
         } else {
-          setError('Failed to load albums');
+          setError('Failed to load data');
         }
       } catch (err) {
-        setError('Failed to load albums');
-        console.error('Error loading albums:', err);
+        setError('An unexpected error occurred');
+        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAlbums();
+    fetchData();
   }, [currentPage]);
 
   const handlePageChange = (page: number) => {
@@ -39,46 +55,43 @@ const Albums: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading albums...</p>
-        </div>
+      <div className="min-h-screen bg-cream-50 pt-32 flex flex-col items-center justify-center text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500 mb-4"></div>
+        <p className="text-lg font-serif text-gray-700">Loading Albums...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
-          <button 
-            onClick={() => setCurrentPage(1)} 
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-          >
-            Try Again
-          </button>
-        </div>
+      <div className="min-h-screen bg-cream-50 pt-32 flex flex-col items-center justify-center text-center px-4">
+        <h2 className="text-3xl font-serif font-bold text-red-600 mb-4">{error}</h2>
+        <p className="text-gray-600 mb-8">We couldn't load the albums. Please try again.</p>
+        <button
+          onClick={() => setCurrentPage(1)}
+          className="inline-flex items-center px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition-colors duration-300 shadow-md"
+        >
+          Try Again
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6">
+    <div className="min-h-screen bg-cream-50 pt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-20">
+          <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-900 tracking-tight mb-6">
             All Albums
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Browse through our complete collection of albums showcasing the finest leather craftsmanship
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Browse through our complete collection of albums, each showcasing the finest leather craftsmanship.
           </p>
         </div>
 
         {albums.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No albums available at the moment.</p>
+          <div className="text-center py-16">
+            <p className="text-gray-700 text-xl">No albums available at the moment.</p>
           </div>
         ) : (
           <>
@@ -87,32 +100,33 @@ const Albums: React.FC = () => {
                 <Link
                   key={`${album.collectionId}-${album.id}`}
                   to={`/collections/${album.collectionId}/albums/${album.id}`}
-                  className="group block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                  className="group block bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-gold-300"
                 >
-                  <div className="aspect-square overflow-hidden">
+                  <div className="relative w-full h-64 overflow-hidden">
                     <img
                       src={album.coverImage}
                       alt={album.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="absolute top-0 left-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
                       }}
                     />
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-serif font-semibold text-gray-900 mb-2 group-hover:text-yellow-600 transition-colors">
+                  <div className="p-5">
+                    <h3 className="text-xl font-serif font-bold text-gray-900 mb-2 truncate group-hover:text-gold-600 transition-colors">
                       {album.name}
                     </h3>
-                    <p className="text-sm text-gray-500 mb-3">
+                    <p className="text-sm text-gray-500 mb-4 truncate">
                       {album.collectionName || 'Unknown Collection'}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 font-medium">
                         {album.images.length} {album.images.length === 1 ? 'Image' : 'Images'}
                       </span>
-                      <span className="text-sm font-medium text-yellow-600 group-hover:text-yellow-700 opacity-0 group-hover:opacity-100 transition-opacity">
-                        View Album →
+                      <span className="font-semibold text-gold-600 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        View
+                        <span className="ml-1.5 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
                       </span>
                     </div>
                   </div>
@@ -121,34 +135,35 @@ const Albums: React.FC = () => {
             </div>
 
             {paginationMeta && paginationMeta.last_page > 1 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={paginationMeta.last_page}
-                onPageChange={handlePageChange}
-              />
+              <div className="mt-20 mb-24">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={paginationMeta.last_page}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             )}
 
-            {/* Stats Section */}
             {paginationMeta && paginationMeta.total > 0 && (
-              <div className="mt-20 bg-white rounded-2xl shadow-lg p-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                  <div>
-                    <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+              <div className="bg-beige-100/50 rounded-2xl border border-black/10">
+                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 text-center p-10">
+                  <div className="md:border-r md:border-black/10 px-4">
+                    <div className="text-4xl font-serif font-bold text-gold-700 mb-2">
                       {new Set(albums.map(album => album.collectionId)).size}
                     </div>
-                    <div className="text-gray-600">Collections on this page</div>
+                    <div className="text-gray-700 tracking-wide">Collections on Page</div>
                   </div>
-                  <div>
-                    <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                  <div className="mt-8 md:mt-0 md:border-r md:border-black/10 px-4">
+                    <div className="text-4xl font-serif font-bold text-gold-700 mb-2">
                       {paginationMeta.total}
                     </div>
-                    <div className="text-gray-600">Total Albums</div>
+                    <div className="text-gray-700 tracking-wide">Total Albums</div>
                   </div>
-                  <div>
-                    <div className="text-3xl font-serif font-bold text-gray-900 mb-2">
+                  <div className="mt-8 md:mt-0 px-4">
+                    <div className="text-4xl font-serif font-bold text-gold-700 mb-2">
                       {albums.reduce((total, album) => total + album.images.length, 0)}
                     </div>
-                    <div className="text-gray-600">Images on this page</div>
+                    <div className="text-gray-700 tracking-wide">Images on Page</div>
                   </div>
                 </div>
               </div>

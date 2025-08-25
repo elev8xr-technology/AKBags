@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { apiService } from '../services/api';
 import { Album as AlbumType, Collection, Image } from '../types';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Camera } from 'lucide-react';
 import ImageModal from '../components/ImageModal';
 import Pagination from '../components/Pagination';
 import { PaginationMeta } from '../types';
@@ -75,110 +75,128 @@ const Album: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading album...</p>
-        </div>
+      <div className="min-h-screen bg-cream-50 pt-32 flex flex-col items-center justify-center text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500 mb-4"></div>
+        <p className="text-lg font-serif text-gray-700">Loading Album...</p>
       </div>
     );
   }
 
   if (error || !collection || !album) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-serif font-bold text-gray-900 mb-4">
-            {error || 'Album Not Found'}
-          </h1>
-          <Link to="/collections" className="text-yellow-600 hover:text-yellow-700">
-            ← Back to Collections
-          </Link>
-        </div>
+      <div className="min-h-screen bg-cream-50 pt-32 flex flex-col items-center justify-center text-center px-4">
+        <h2 className="text-3xl font-serif font-bold text-red-600 mb-4">
+          {error || 'Album Not Found'}
+        </h2>
+        <p className="text-gray-600 mb-8">
+          We couldn't find the album you're looking for.
+        </p>
+        <Link
+          to={collectionId ? `/collections/${collectionId}` : '/collections'}
+          className="inline-flex items-center px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition-colors duration-300 shadow-md"
+        >
+          <ArrowLeft size={20} className="mr-2" />
+          Back to Collection
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Back Button */}
-        <Link
-          to={`/collections/${collection.id}`}
-          className="inline-flex items-center text-gray-600 hover:text-yellow-600 mb-8 transition-colors"
-        >
-          <ArrowLeft size={20} className="mr-2" />
-          Back to {collection.name}
-        </Link>
-
-        {/* Album Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
-            {album.name}
-          </h1>
-          <p className="text-lg text-gray-600">
-            {collection.name} • {paginationMeta?.total || 0} {paginationMeta?.total === 1 ? 'Image' : 'Images'}
-          </p>
+    <div className="bg-cream-50 min-h-screen animate-fade-in">
+      {/* Album Header Section */}
+      <section 
+        className="relative bg-gray-800 bg-cover bg-center text-white py-20 md:py-28"
+        style={{ backgroundImage: `url(${album.coverImage || 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'})` }}
+      >
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <Link
+              to={`/collections/${collection.id}`}
+              className="inline-flex items-center text-gold-300 hover:text-white transition-colors group text-sm"
+            >
+              <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+              Back to {collection.name}
+            </Link>
+          </div>
+          <div className="text-center">
+            <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
+              {album.name}
+            </h1>
+            <p className="text-lg text-gray-300 flex items-center justify-center space-x-2">
+              <Camera size={18} />
+              <span>{paginationMeta?.total || 0} {paginationMeta?.total === 1 ? 'Image' : 'Images'}</span>
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* Images Grid */}
-        {images.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No images available in this album.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {images.map((image, index) => (
-              <button
-                key={image.id}
-                onClick={() => handleImageClick(image, index)}
-                className="group relative aspect-square bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-              >
-                <img
-                  src={image.url}
-                  alt={image.title || 'Image'}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
-                  }}
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                {image.title && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-white text-sm font-medium truncate">{image.title}</p>
-                  </div>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
+      {/* Images Gallery Section */}
+      <section className="py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {images.length === 0 ? (
+            <div className="text-center py-16 bg-cream-100/50 rounded-xl border border-gray-200/80">
+                <Camera size={48} className="mx-auto text-gray-400 mb-4" />
+                <h3 className="text-2xl font-serif font-bold text-gray-800 mb-2">This Album is Empty</h3>
+                <p className="text-gray-600">Check back later to see new images.</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                {images.map((image, index) => (
+                  <button
+                    key={image.id}
+                    onClick={() => handleImageClick(image, index)}
+                    className="group relative aspect-w-1 aspect-h-1 bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200/60"
+                  >
+                    <img
+                      src={image.url}
+                      alt={image.title || 'Album image'}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+                    {image.title && (
+                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="text-white text-xs font-medium truncate drop-shadow-md">{image.title}</p>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+              {paginationMeta && paginationMeta.last_page > 1 && (
+                <div className="my-16">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={paginationMeta.last_page}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
 
-        {paginationMeta && paginationMeta.last_page > 1 && (
-          <div className="mt-12">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={paginationMeta.last_page}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        )}
-
-        {/* Image Modal */}
-        {selectedImage && album && (
-          <ImageModal
-            image={selectedImage}
-            album={album}
-            collection={collection}
-            isOpen={!!selectedImage}
-            onClose={() => setSelectedImage(null)}
-            onNext={handleNextImage}
-            onPrevious={handlePreviousImage}
-            hasNext={selectedImageIndex < images.length - 1}
-            hasPrevious={selectedImageIndex > 0}
-          />
-        )}
-      </div>
+      {/* Image Modal */}
+      {selectedImage && album && (
+        <ImageModal
+          image={selectedImage}
+          album={album}
+          collection={collection}
+          isOpen={!!selectedImage}
+          onClose={() => setSelectedImage(null)}
+          onNext={handleNextImage}
+          onPrevious={handlePreviousImage}
+          hasNext={selectedImageIndex < images.length - 1}
+          hasPrevious={selectedImageIndex > 0}
+        />
+      )}
     </div>
   );
 };
