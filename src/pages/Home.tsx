@@ -127,6 +127,95 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Featured Albums Section */}
+      {featuredAlbums.length > 0 && (
+        <section className="bg-white py-16 md:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
+                Featured Albums
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Explore our curated selection of albums showcasing the finest leather craftsmanship.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-10 mb-16">
+              {featuredAlbums.map((album) => (
+                <Link
+                  key={`${album.collectionId}-${album.id}`}
+                  to={`/collections/${album.collectionId}/albums/${album.id}`}
+                  className="group block bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border border-gray-200/80"
+                >
+                  <div className="aspect-square overflow-hidden">
+                    <img
+                      src={album.coverImage}
+                      alt={album.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
+                      }}
+                    />
+                  </div>
+                  <div className="p-3 sm:p-6">
+                    <p className="text-xs sm:text-sm text-gold-700 font-semibold mb-1">
+                      {album.collectionName}
+                    </p>
+                    <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-gold-600 transition-colors">
+                      {album.name}
+                    </h3>
+                    <div className="flex items-center justify-end">
+                       <span className="text-base font-semibold text-gold-600 group-hover:text-gold-700 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        View Album <ArrowRight size={16} className="ml-2" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link
+                to="/albums"
+                className="inline-flex items-center px-8 py-3 border-2 border-gray-900 text-gray-900 font-bold rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300 group text-lg"
+              >
+                <Eye size={20} className="mr-3" />
+                Browse All Albums
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Featured Images Section */}
+      {featuredImages.length > 0 && (
+        <section className="bg-cream-50 py-16 md:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
+                Featured Images
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                A glimpse into our world of elegance and style, captured in moments.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {featuredImages.map((image) => (
+                <div key={image.id} className="group aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full overflow-hidden rounded-lg bg-gray-200 relative shadow-lg border-4 border-white">
+                  <img
+                    src={image.image_url}
+                    alt={image.title}
+                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-0 transition-all duration-300"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Featured Collections Section */}
       {featuredCollections.length > 0 && (
         <section className="bg-cream-50 py-16 md:py-20">
@@ -184,95 +273,6 @@ const Home: React.FC = () => {
               >
                 <Grid3X3 size={20} className="mr-3" />
                 View All Collections
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Featured Images Section */}
-      {featuredImages.length > 0 && (
-        <section className="bg-cream-50 py-16 md:py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
-                Featured Images
-              </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                A glimpse into our world of elegance and style, captured in moments.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {featuredImages.map((image) => (
-                <div key={image.id} className="group aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full overflow-hidden rounded-lg bg-gray-200 relative shadow-lg border-4 border-white">
-                  <img
-                    src={image.image_url}
-                    alt={image.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-0 transition-all duration-300"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Featured Albums Section */}
-      {featuredAlbums.length > 0 && (
-        <section className="bg-white py-16 md:py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
-                Featured Albums
-              </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Explore our curated selection of albums showcasing the finest leather craftsmanship.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-10 mb-16">
-              {featuredAlbums.map((album) => (
-                <Link
-                  key={`${album.collectionId}-${album.id}`}
-                  to={`/collections/${album.collectionId}/albums/${album.id}`}
-                  className="group block bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border border-gray-200/80"
-                >
-                  <div className="aspect-square overflow-hidden">
-                    <img
-                      src={album.coverImage}
-                      alt={album.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
-                      }}
-                    />
-                  </div>
-                  <div className="p-3 sm:p-6">
-                    <p className="text-xs sm:text-sm text-gold-700 font-semibold mb-1">
-                      {album.collectionName}
-                    </p>
-                    <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-gold-600 transition-colors">
-                      {album.name}
-                    </h3>
-                    <div className="flex items-center justify-end">
-                       <span className="text-base font-semibold text-gold-600 group-hover:text-gold-700 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        View Album <ArrowRight size={16} className="ml-2" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-
-            <div className="text-center">
-              <Link
-                to="/albums"
-                className="inline-flex items-center px-8 py-3 border-2 border-gray-900 text-gray-900 font-bold rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300 group text-lg"
-              >
-                <Eye size={20} className="mr-3" />
-                Browse All Albums
               </Link>
             </div>
           </div>
