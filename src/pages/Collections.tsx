@@ -87,7 +87,7 @@ const Collections: React.FC = () => {
                 <Link
                   key={collection.id}
                   to={`/collections/${collection.id}`}
-                  className="group block bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-gold-300"
+                  className="group flex flex-col bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-gold-300"
                 >
                   <div className="aspect-w-4 aspect-h-3 overflow-hidden">
                     <img
@@ -100,16 +100,16 @@ const Collections: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3 group-hover:text-gold-600 transition-colors">
-                      {collection.name}
-                    </h3>
-                    {collection.description && (
-                      <p className="text-gray-600 text-base leading-relaxed mb-5 h-20 overflow-hidden text-ellipsis">
-                        {collection.description}
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex-grow">
+                      <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3 group-hover:text-gold-600 transition-colors">
+                        {collection.name}
+                      </h3>
+                      <p className="text-gray-600 text-base leading-relaxed mb-5 min-h-[5rem]">
+                        {collection.description || '\u00A0'}
                       </p>
-                    )}
-                    <div className="flex items-center justify-end">
+                    </div>
+                    <div className="flex items-center justify-end mt-auto pt-4">
                       <span className="text-base font-semibold text-gold-600 group-hover:text-gold-700 flex items-center">
                         View Collection
                         <span className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1">→</span>

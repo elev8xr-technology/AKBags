@@ -35,3 +35,14 @@ export interface PaginatedResponse<T> {
   data: T[];
   meta: PaginationMeta;
 }
+
+export interface FeaturedImage {
+  id: number;
+  title: string;
+  description?: string | null;
+  position: number;
+  image_url: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}

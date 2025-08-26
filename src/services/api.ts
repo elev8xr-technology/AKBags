@@ -1,4 +1,4 @@
-import { PaginatedResponse } from '../types';
+import { PaginatedResponse, FeaturedImage } from '../types';
 
 const BASE_URL = 'https://akbag.elev8xr.com/api';
 const STORAGE_URL = 'https://akbag.elev8xr.com/storage';
@@ -103,6 +103,17 @@ export const transformImage = (apiImage: ApiImage) => {
 
 // API Service Functions
 export const apiService = {
+  async getFeaturedImages(): Promise<FeaturedImage[] | null> {
+    try {
+      const response = await fetch(`${BASE_URL}/featured-images`);
+      if (!response.ok) throw new Error('Failed to fetch featured images');
+      const json: { data: FeaturedImage[] } = await response.json();
+      return json.data;
+    } catch (error) {
+      console.error('Error fetching featured images:', error);
+      return null;
+    }
+  },
   async getCollections(page = 1, perPage = 15) {
     try {
       const response = await fetch(`${BASE_URL}/collections?page=${page}&per_page=${perPage}`);

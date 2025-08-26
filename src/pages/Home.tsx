@@ -4,11 +4,12 @@ import { ArrowRight, Eye, Grid3X3 } from 'lucide-react';
 import HeroImage from '../../LL.png';
 import MobileHeroImage from '../../mobilebg.png';
 import { apiService } from '../services/api';
-import { Collection, Album } from '../types';
+import { Collection, Album, FeaturedImage } from '../types';
 
 const Home: React.FC = () => {
     const [collections, setCollections] = useState<Collection[]>([]);
   const [featuredAlbums, setFeaturedAlbums] = useState<Album[]>([]);
+  const [featuredImages, setFeaturedImages] = useState<FeaturedImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [totalCollections, setTotalCollections] = useState(0);
@@ -16,18 +17,26 @@ const Home: React.FC = () => {
   const [totalImages, setTotalImages] = useState(0);
 
   useEffect(() => {
-    const fetchCollections = async () => {
+    const fetchHomepageData = async () => {
       try {
         setLoading(true);
-                // Fetch featured content
-        const collectionsResult = await apiService.getCollections(1, 3);
+                // Fetch primary content in parallel
+        const [collectionsResult, albumsResult, featuredImagesResult] = await Promise.all([
+          apiService.getCollections(1, 3),
+          apiService.getAllAlbums(1, 3),
+          apiService.getFeaturedImages()
+        ]);
+
         if (collectionsResult) {
           setCollections(collectionsResult.data as Collection[]);
         }
 
-        const albumsResult = await apiService.getAllAlbums(1, 3);
         if (albumsResult && albumsResult.data) {
           setFeaturedAlbums(albumsResult.data as Album[]);
+        }
+
+        if (featuredImagesResult) {
+          setFeaturedImages(featuredImagesResult);
         }
 
         // Fetch total counts in parallel
@@ -49,14 +58,14 @@ const Home: React.FC = () => {
           setTotalImages(imagesTotalResult.meta.total);
         }
       } catch (err) {
-        setError('Failed to load collections');
-        console.error('Error loading collections:', err);
+        setError('Failed to load page content');
+        console.error('Error loading homepage data:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCollections();
+    fetchHomepageData();
   }, []);
 
     // Get featured collections (first 3)
@@ -136,7 +145,7 @@ const Home: React.FC = () => {
                 <Link
                   key={collection.id}
                   to={`/collections/${collection.id}`}
-                  className="group block bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border border-gray-200/80"
+                  className="group flex flex-col bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border border-gray-200/80"
                 >
                   <div className="overflow-hidden aspect-video">
                     <img
@@ -149,14 +158,16 @@ const Home: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-serif font-bold text-gray-900 mb-2 group-hover:text-gold-600 transition-colors">
-                      {collection.name}
-                    </h3>
-                    <p className="text-gray-600 text-base leading-relaxed mb-4 line-clamp-2">
-                      {collection.description}
-                    </p>
-                    <div className="flex items-center justify-end">
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex-grow">
+                      <h3 className="text-xl font-serif font-bold text-gray-900 mb-2 group-hover:text-gold-600 transition-colors">
+                        {collection.name}
+                      </h3>
+                      <p className="text-gray-600 text-base leading-relaxed mb-4 line-clamp-2 min-h-[2.5rem]">
+                        {collection.description || '\u00A0'}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-end mt-auto pt-4">
                       <span className="text-base font-semibold text-gold-600 group-hover:text-gold-700 flex items-center">
                         View Collection <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
                       </span>
@@ -174,6 +185,34 @@ const Home: React.FC = () => {
                 <Grid3X3 size={20} className="mr-3" />
                 View All Collections
               </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Featured Images Section */}
+      {featuredImages.length > 0 && (
+        <section className="bg-cream-50 py-16 md:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
+                Featured Images
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                A glimpse into our world of elegance and style, captured in moments.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {featuredImages.map((image) => (
+                <div key={image.id} className="group aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full overflow-hidden rounded-lg bg-gray-200 relative shadow-lg border-4 border-white">
+                  <img
+                    src={image.image_url}
+                    alt={image.title}
+                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-0 transition-all duration-300"></div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
