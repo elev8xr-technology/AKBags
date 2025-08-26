@@ -1,13 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import AkLogo from '../../AKlogo.png';
 
-interface HeaderProps {
-  onSearchToggle: () => void;
-}
 
-const Header: React.FC<HeaderProps> = ({ onSearchToggle }) => {
+const Header: React.FC = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -43,16 +40,8 @@ const Header: React.FC<HeaderProps> = ({ onSearchToggle }) => {
             ))}
           </div>
 
-          {/* Search and Mobile Menu Toggle */}
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={onSearchToggle}
-              className="p-2 text-gray-800 hover:text-gold-600 rounded-full hover:bg-gold-100/50 transition-colors"
-              aria-label="Search"
-            >
-              <Search size={22} />
-            </button>
-            
+          {/* Mobile Menu Toggle */}
+          <div className="flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 text-gray-800 hover:text-gold-600 rounded-full hover:bg-gold-100/50 transition-colors"
