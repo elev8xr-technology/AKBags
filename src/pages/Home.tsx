@@ -129,7 +129,7 @@ const Home: React.FC = () => {
 
       {/* Featured Albums Section */}
       {featuredAlbums.length > 0 && (
-        <section className="bg-white py-16 md:py-20">
+        <section className="bg-cream-50 py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 md:mb-12">
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-3">
@@ -321,7 +321,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-white py-20 md:py-24">
+      <section className="bg-cream-50 py-20 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-cream-50 rounded-2xl shadow-lg p-8 lg:p-12 border border-gray-200/80">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-8 text-center sm:divide-x divide-gray-300/70">
