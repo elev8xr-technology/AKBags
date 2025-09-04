@@ -85,6 +85,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
               src={image.url}
               alt={image.title || 'Image'}
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              style={{ objectFit: 'contain', objectPosition: 'center' }}
             />
           </div>
 

@@ -107,6 +107,7 @@ const Albums: React.FC = () => {
                       src={album.coverImage}
                       alt={album.name}
                       className="absolute top-0 left-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                      style={{ objectFit: 'cover', objectPosition: 'center' }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';

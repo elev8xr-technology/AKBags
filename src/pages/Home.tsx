@@ -152,6 +152,7 @@ const Home: React.FC = () => {
                       src={album.coverImage}
                       alt={album.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      style={{ objectFit: 'cover', objectPosition: 'center' }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';
@@ -207,6 +208,7 @@ const Home: React.FC = () => {
                     src={image.image_url}
                     alt={image.title}
                     className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-in-out"
+                    style={{ objectFit: 'cover', objectPosition: 'center' }}
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-0 transition-all duration-300"></div>
                 </div>
@@ -241,6 +243,7 @@ const Home: React.FC = () => {
                       src={collection.coverImage}
                       alt={collection.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      style={{ objectFit: 'cover', objectPosition: 'center' }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800';

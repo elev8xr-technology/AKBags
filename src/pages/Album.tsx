@@ -148,12 +148,14 @@ const Album: React.FC = () => {
                   <button
                     key={image.id}
                     onClick={() => handleImageClick(image, index)}
-                    className="group relative aspect-w-1 aspect-h-1 bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200/60"
+                    className="group relative bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200/60 flex items-center justify-center"
+                    style={{ aspectRatio: '1 / 1' }}
                   >
                     <img
                       src={image.url}
                       alt={image.title || 'Album image'}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      style={{ objectFit: 'cover', objectPosition: 'center' }}
                       loading="lazy"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
