@@ -80,12 +80,12 @@ const ImageModal: React.FC<ImageModalProps> = ({
 
         {/* Image Container */}
         <div className="flex flex-col items-center justify-center w-full h-full">
-          <div className="relative max-w-full max-h-[80vh] mb-6">
+          <div className="relative max-w-full max-h-[80vh] mb-6 flex items-center justify-center">
             <img
               src={image.url}
               alt={image.title || 'Image'}
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-              style={{ objectFit: 'contain', objectPosition: 'center' }}
+              style={{ objectFit: 'contain', objectPosition: 'center', width: '100%', margin: 'auto' }}
             />
           </div>
 
