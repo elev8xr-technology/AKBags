@@ -255,9 +255,6 @@ const Home: React.FC = () => {
                       <h3 className="text-xl font-serif font-bold text-gray-900 mb-2 group-hover:text-gold-600 transition-colors">
                         {collection.name}
                       </h3>
-                      <p className="text-gray-600 text-base leading-relaxed mb-4 line-clamp-2 min-h-[2.5rem]">
-                        {collection.description || '\u00A0'}
-                      </p>
                     </div>
                     <div className="flex items-center justify-end mt-auto pt-4">
                       <span className="text-base font-semibold text-gold-600 group-hover:text-gold-700 flex items-center">

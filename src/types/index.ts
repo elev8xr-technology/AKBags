@@ -3,6 +3,11 @@ export interface Image {
   url: string;
   title?: string;
   alt?: string;
+  original_url?: string;
+  album_id?: string;
+  album?: Album;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Album {
@@ -12,14 +17,21 @@ export interface Album {
   images: Image[];
   collectionId: string;
   collectionName?: string;
+  images_count?: number;
+  collection?: Collection;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Collection {
   id: string;
   name: string;
   coverImage: string;
-  description?: string;
   albums: Album[];
+  albums_count?: number;
+  cover_image_url?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface PaginationMeta {

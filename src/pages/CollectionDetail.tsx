@@ -103,11 +103,6 @@ export const CollectionDetail: React.FC = () => {
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold mb-4">
             {collection.name}
           </h1>
-          {collection.description && (
-            <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
-              {collection.description}
-            </p>
-          )}
         </div>
       </section>
 

@@ -106,9 +106,13 @@ const Collections: React.FC = () => {
                       <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3 group-hover:text-gold-600 transition-colors">
                         {collection.name}
                       </h3>
-                      <p className="text-gray-600 text-base leading-relaxed mb-5 min-h-[5rem]">
-                        {collection.description || '\u00A0'}
-                      </p>
+                      {collection.albums_count !== undefined && (
+                        <div className="flex items-center text-sm text-gray-500 mb-4">
+                          <span className="bg-gray-100 px-2 py-1 rounded-full">
+                            {collection.albums_count} {collection.albums_count === 1 ? 'Album' : 'Albums'}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center justify-end mt-auto pt-4">
                       <span className="text-base font-semibold text-gold-600 group-hover:text-gold-700 flex items-center">

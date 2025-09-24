@@ -17,20 +17,14 @@ const Albums: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch albums and all collections in parallel
-        const [albumsResult, collectionsResult] = await Promise.all([
-          apiService.getAllAlbums(currentPage, 8),
-          apiService.getCollections(1, 100) // Fetch up to 100 collections
-        ]);
+        // Fetch albums - now includes collection relationship from backend
+        const albumsResult = await apiService.getAllAlbums(currentPage, 8);
 
-        if (albumsResult && collectionsResult && albumsResult.data && collectionsResult.data) {
-          const collectionsMap = new Map(
-            (collectionsResult.data as Collection[]).map(c => [c.id, c.name])
-          );
-
+        if (albumsResult && albumsResult.data) {
+          // Collection names are now included in the API response
           const albumsWithCollectionNames = (albumsResult.data as Album[]).map(album => ({
             ...album,
-            collectionName: collectionsMap.get(album.collectionId) || 'Unknown Collection'
+            collectionName: album.collectionName || album.collection?.name || 'Unknown Collection'
           }));
 
           setAlbums(albumsWithCollectionNames);
@@ -123,7 +117,7 @@ const Albums: React.FC = () => {
                     </p>
                     <div className="flex items-center justify-between text-xs sm:text-sm">
                       <span className="text-gray-600 font-medium">
-                        {album.images.length} {album.images.length === 1 ? 'Image' : 'Images'}
+                        {album.images_count ?? album.images.length} {(album.images_count ?? album.images.length) === 1 ? 'Image' : 'Images'}
                       </span>
                       <span className="font-semibold text-gold-600 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         View
